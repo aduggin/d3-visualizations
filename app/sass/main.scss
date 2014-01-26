@@ -1,5 +1,7 @@
-$color: red;
+$color-svg-background: #ddd;
 
-h1 {
-  background: $color;
+svg {
+  background:$color-svg-background;
+  width:500px;
+  height:280px;
 }
