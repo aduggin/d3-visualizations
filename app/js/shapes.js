@@ -8,7 +8,7 @@ svg.append('rect')
         ry: 25,
         height: 200,
         width: 200,
-        fill: 'white',
+        fill: 'green',
         stroke: 'black'
     });
 

@@ -1,19 +1,20 @@
 'use strict';
 
 module.exports = function (grunt) {
-    // load jshint plugin
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-sass');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
-    var sassFiles = [{
-        expand: true,
-        cwd: 'app/sass/',
-        dest: '.tmp/styles/',
-        src: '**/*.scss',
-        ext: '.css'
-    }];
+    // Load Grunt tasks declared in the package.json file
+    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
+    // Configure Grunt
+    var sassFiles = [
+        {
+            expand: true,
+            cwd: 'app/sass/',
+            dest: '.tmp/styles/',
+            src: '**/*.scss',
+            ext: '.css'
+        }
+    ];
 
     grunt.initConfig({
         jshint: {
@@ -27,6 +28,7 @@ module.exports = function (grunt) {
                 'test/**/*.js',
             ]
         },
+
         sass: {
             options: {
                 cacheLocation: '.tmp/.sass-cache'
@@ -45,11 +47,11 @@ module.exports = function (grunt) {
                 files: sassFiles
             }
         },
+
         connect: {
             server: {
                 options: {
                     port: 9000,
-                    keepalive: true,
                     middleware: function (connect) {
                         var path = require('path');
                         return [
@@ -58,13 +60,14 @@ module.exports = function (grunt) {
                         ];
                     }
                 }
-            },test: {
+            },
+            test: {
                 options: {
-                    port:9001,
-                    keepalive: true
+                    port: 9001,
                 }
             }
         },
+
         jasmine: {
             shell: {
                 options: {
@@ -73,8 +76,75 @@ module.exports = function (grunt) {
                     outfile: 'test/index.html'
                 },
                 src: ['app/js/**/*.js', "!app/js/vendor"]
-            },
+            }
+        },
 
+        watch: {
+            html: {
+                files: ['app/index.html'],
+                options: {
+                    livereload: true
+                }
+            },
+            sass: {
+                files: ['app/sass/*.scss'],
+                tasks: ['sass:dev'],
+                options: {
+                    livereload: true
+                }
+            },
+            js: {
+                files: [
+                    'Gruntfile.js',
+                    'app/js/**/*.js',
+                    '!app/js/vendor/**/*.js',
+                    'test/**/*.js',
+                ],
+                tasks: ['jshint', 'jasmine:shell'],
+                options: {
+                    livereload: true
+                }
+            }
+        },
+
+        open: {
+            server: {
+                path: 'http://0.0.0.0:9000'
+            },
+            test: {
+                path: 'http://0.0.0.0:9001/test'
+            }
+        },
+
+        clean: {
+            all: ['.tmp', '.grunt', 'test/index.html']
         }
     });
+
+    grunt.registerTask('server', 'Run a server', [
+        'jshint',
+        'sass:dev',
+        'connect:server',
+        'open:server',
+        'watch'
+    ]);
+
+    grunt.registerTask('test', 'Run tests in the console', [
+        'jshint',
+        'jasmine'
+    ]);
+
+    grunt.registerTask('test:browser', 'Run tests in a browser', [
+        'jshint',
+        'jasmine:shell:build',
+        'connect:test',
+        'open:test',
+        'watch'
+    ]);
+
+    grunt.registerTask('version', 'Shows version number', function () {
+        var pkg = grunt.file.readJSON('package.json');
+        console.log(pkg.name, pkg.version);
+    });
+
 };
