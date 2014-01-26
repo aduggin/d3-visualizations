@@ -5,6 +5,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
     var sassFiles = [{
         expand: true,
@@ -22,7 +23,8 @@ module.exports = function (grunt) {
             all: [
                 'Gruntfile.js',
                 'app/js/**/*.js',
-                '!app/js/vendor/**/*.js'
+                '!app/js/vendor/**/*.js',
+                'test/**/*.js',
             ]
         },
         sass: {
@@ -56,7 +58,23 @@ module.exports = function (grunt) {
                         ];
                     }
                 }
+            },test: {
+                options: {
+                    port:9001,
+                    keepalive: true
+                }
             }
+        },
+        jasmine: {
+            shell: {
+                options: {
+                    specs: ['test/specs/**/**_spec.js'],
+                    vendor: ['app/js/vendor/**/*.js'],
+                    outfile: 'test/index.html'
+                },
+                src: ['app/js/**/*.js', "!app/js/vendor"]
+            },
+
         }
     });
 };
