@@ -117,8 +117,29 @@ module.exports = function (grunt) {
         },
 
         clean: {
-            all: ['.tmp', '.grunt', 'test/index.html']
-        }
+            all: [
+                '.tmp',
+                '.grunt',
+                'test/index.html',
+                'dist'
+            ]
+        },
+
+        copy: {
+            release: {
+                files: [{
+                    expand: true,
+                    cwd: 'app',
+                    dest: 'dist',
+                    src: ['*.html', 'js/**/*']
+                }, {
+                    expand: true,
+                    cwd: '.tmp',
+                    dest: 'dist',
+                    src: ['styles/*']
+                }]
+            }
+        },
     });
 
     grunt.registerTask('server', 'Run a server', [
@@ -146,5 +167,12 @@ module.exports = function (grunt) {
         var pkg = grunt.file.readJSON('package.json');
         console.log(pkg.name, pkg.version);
     });
+
+    grunt.registerTask('release', 'Generates a release tarball', [
+        'sass:prod',
+        'test',
+        'clean',
+        'copy:release'
+    ]);
 
 };
