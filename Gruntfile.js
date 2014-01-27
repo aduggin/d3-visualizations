@@ -140,6 +140,12 @@ module.exports = function (grunt) {
                 }]
             }
         },
+
+        build_gh_pages: {
+            gh_pages: {
+
+            }
+        }
     });
 
     grunt.registerTask('server', 'Run a server', [
@@ -168,11 +174,12 @@ module.exports = function (grunt) {
         console.log(pkg.name, pkg.version);
     });
 
-    grunt.registerTask('release', 'Generates a release tarball', [
+    grunt.registerTask('release', 'Generate files, runs tests and deploy to github pages', [
         'sass:prod',
         'test',
         'clean',
-        'copy:release'
+        'copy:release',
+        'build_gh_pages:gh_pages'
     ]);
 
 };
