@@ -127,17 +127,20 @@ module.exports = function (grunt) {
 
         copy: {
             release: {
-                files: [{
-                    expand: true,
-                    cwd: 'app',
-                    dest: 'dist',
-                    src: ['*.html', 'js/**/*']
-                }, {
-                    expand: true,
-                    cwd: '.tmp',
-                    dest: 'dist',
-                    src: ['styles/*']
-                }]
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'app',
+                        dest: 'dist',
+                        src: ['*.html', 'js/**/*']
+                    },
+                    {
+                        expand: true,
+                        cwd: '.tmp',
+                        dest: 'dist',
+                        src: ['styles/*']
+                    }
+                ]
             }
         },
 
@@ -169,17 +172,16 @@ module.exports = function (grunt) {
         'watch'
     ]);
 
-    grunt.registerTask('version', 'Shows version number', function () {
-        var pkg = grunt.file.readJSON('package.json');
-        console.log(pkg.name, pkg.version);
-    });
-
-    grunt.registerTask('release', 'Generate files, runs tests and deploy to github pages', [
+    grunt.registerTask('release', 'Generate files, runs tests, build to dist and copy files to gh-pages-branc', [
+        'clean',
         'sass:prod',
         'test',
-        'clean',
         'copy:release',
         'build_gh_pages:gh_pages'
     ]);
 
+    grunt.registerTask('version', 'Shows version number', function () {
+        var pkg = grunt.file.readJSON('package.json');
+        console.log(pkg.name, pkg.version);
+    });
 };
