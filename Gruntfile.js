@@ -17,6 +17,18 @@ module.exports = function (grunt) {
     ];
 
     grunt.initConfig({
+        csslint: {
+            options: {
+                csslintrc: '.csslintrc'
+            },
+            strict: {
+                options: {
+                    import: 2
+                },
+                src: ['.tmp/styles/*.css']
+            }
+        },
+
         jshint: {
             options: {
                 jshintrc: '.jshintrc'
@@ -86,6 +98,10 @@ module.exports = function (grunt) {
                     livereload: true
                 }
             },
+            css: {
+                files: ['.tmp/styles/*.css'],
+                tasks: ['csslint']
+            },
             sass: {
                 files: ['app/sass/*.scss'],
                 tasks: ['sass:dev'],
@@ -152,6 +168,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('server', 'Run a server', [
+        'csslint',
         'jshint',
         'sass:dev',
         'connect:server',
@@ -160,11 +177,13 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('test', 'Run tests in the console', [
+        'csslint',
         'jshint',
         'jasmine'
     ]);
 
     grunt.registerTask('test:browser', 'Run tests in a browser', [
+        'csslint',
         'jshint',
         'jasmine:shell:build',
         'connect:test',
