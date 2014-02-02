@@ -208,7 +208,7 @@ module.exports = function (grunt) {
         'autoprefixer',
         'test',
         'copy:release',
-        //'build_gh_pages:gh_pages'
+        'build_gh_pages:gh_pages'
     ]);
 
     grunt.registerTask('version', 'Shows version number', function () {
