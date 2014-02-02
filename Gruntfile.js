@@ -60,6 +60,17 @@ module.exports = function (grunt) {
             }
         },
 
+        autoprefixer: {
+
+            options: {
+                browsers: ['> 1%', 'last 2 versions', 'ff 17', 'opera 12.1']
+            },
+            no_dest: {
+                src: '.tmp/styles/*.css'
+            }
+        },
+
+
         connect: {
             server: {
                 options: {
@@ -75,7 +86,7 @@ module.exports = function (grunt) {
             },
             test: {
                 options: {
-                    port: 9001,
+                    port: 9001
                 }
             }
         },
@@ -98,16 +109,16 @@ module.exports = function (grunt) {
                     livereload: true
                 }
             },
-            css: {
-                files: ['.tmp/styles/*.css'],
-                tasks: ['csslint']
-            },
             sass: {
                 files: ['app/sass/*.scss'],
-                tasks: ['sass:dev'],
+                tasks: ['sass:dev', 'autoprefixer'],
                 options: {
                     livereload: true
                 }
+            },
+            css: {
+                files: ['.tmp/styles/*.css'],
+                tasks: ['csslint']
             },
             js: {
                 files: [
@@ -194,9 +205,10 @@ module.exports = function (grunt) {
     grunt.registerTask('release', 'Generate files, runs tests, build to dist and copy files to gh-pages-branc', [
         'clean',
         'sass:prod',
+        'autoprefixer',
         'test',
         'copy:release',
-        'build_gh_pages:gh_pages'
+        //'build_gh_pages:gh_pages'
     ]);
 
     grunt.registerTask('version', 'Shows version number', function () {
